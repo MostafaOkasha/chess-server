@@ -21,6 +21,21 @@ ENDPOINTS = {
 }
 
 
+def connection_error_handler(func):
+    """connection_error_handler
+
+    Wrap functions in Python which send requests to
+    abort if connection error occurs.
+    """
+    def wrapper(*args, **kwargs):
+        try:
+            func(*args, **kwargs)
+        except requests.exceptions.ConnectionError:
+            print("Error: Run the flask server before executing this module!")
+            exit(0)
+    return wrapper
+
+
 def create_request(uri, endpoint, **kwargs):
     """create_request
 
@@ -34,6 +49,7 @@ def create_request(uri, endpoint, **kwargs):
     return f"{uri}{endpoint}{query_parameters}"
 
 
+@connection_error_handler
 def start_game(uri):
     """start_game
 
@@ -58,6 +74,7 @@ def prettify_board(board):
     return top + "\n".join(numbered_board) + bottom
 
 
+@connection_error_handler
 def request_player_move(uri):
     """request_player_move
 
@@ -73,6 +90,7 @@ def request_player_move(uri):
     return move_resp.text
 
 
+@connection_error_handler
 def play_game(uri):
     """play_game
 
