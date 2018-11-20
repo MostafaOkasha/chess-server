@@ -29,7 +29,7 @@ def connection_error_handler(func):
     """
     def wrapper(*args, **kwargs):
         try:
-            func(*args, **kwargs)
+            return func(*args, **kwargs)
         except requests.exceptions.ConnectionError:
             print("Error: Run the flask server before executing this module!")
             exit(0)
@@ -87,6 +87,7 @@ def request_player_move(uri):
     move_url = create_request(uri, ENDPOINTS["move"], move=player_move)
     move_resp = requests.get(move_url)
 
+    # print(move_resp.text)
     return move_resp.text
 
 
